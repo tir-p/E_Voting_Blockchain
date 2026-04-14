@@ -1,66 +1,48 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import ElectionBanner from "@/components/LandingPage/ElectionBanner";
+import ProceedButton from "@/components/LandingPage/ProceedButton";
+import ResultsChart from "@/components/LandingPage/ResultsChart";
 
 export default function Home() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.js file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="shell">
+      <section className="overview-ribbon">
+        <div className="overview-stat">
+          <strong>Public access</strong>
+          <span>Results page stays open to every observer.</span>
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className="overview-stat">
+          <strong>No sessions</strong>
+          <span>Eligibility is derived from NIC-to-wallet binding only.</span>
         </div>
-      </main>
-    </div>
+        <div className="overview-stat">
+          <strong>One-time cancel</strong>
+          <span>Cancellation removes the vote and permanently locks re-voting.</span>
+        </div>
+      </section>
+      <ElectionBanner />
+      <section className="dashboard-grid">
+        <ResultsChart />
+        <aside className="info-column">
+          <div className="glass-card info-card">
+            <span className="eyebrow">Verification Model</span>
+            <h2>Firebase lookup. MetaMask proof. Blockchain finality.</h2>
+            <p>
+              Voters do not log in. They enter a NIC number, the server checks
+              the pre-registered NIC hash in Firestore, and the connected wallet
+              must match the assigned address before the ballot appears.
+            </p>
+          </div>
+          <div className="glass-card info-card">
+            <span className="eyebrow">Election Rules</span>
+            <ul className="feature-list">
+              <li>One registered wallet can cast one vote.</li>
+              <li>Cancellation is allowed once and permanently ends eligibility.</li>
+              <li>Results are read directly from the smart contract.</li>
+            </ul>
+          </div>
+          <ProceedButton />
+        </aside>
+      </section>
+    </main>
   );
 }

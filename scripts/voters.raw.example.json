@@ -1,0 +1,14 @@
+[
+  {
+    "nic": "A123456789012",
+    "walletAddress": "0x1111111111111111111111111111111111111111",
+    "fullName": "Voter One",
+    "isEligible": true
+  },
+  {
+    "nic": "B987654321098",
+    "walletAddress": "0x2222222222222222222222222222222222222222",
+    "fullName": "Voter Two",
+    "isEligible": true
+  }
+]

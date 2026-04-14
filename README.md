@@ -1,62 +1,41 @@
-\# E-Voting Using Blockchain
+# E-Voting Using Blockchain V2
 
+Blockchain-based e-voting system built with Next.js 16 App Router, Firebase
+Admin, Solidity, Hardhat 3, ethers, and MetaMask.
 
+## Architecture
 
-University project — blockchain-based e-voting system built with
+- `Firebase` stores the pre-registered NIC-hash to wallet mapping and optional vote metadata.
+- `Next.js` renders the landing page, voting flow, and secure server APIs for NIC verification.
+- `Ethereum` is the source of truth for registration, vote state, cancellation state, and results.
 
-Next.js, Firebase, Solidity, and MetaMask.
+## Project Structure
 
+- `app/` App Router pages and route handlers
+- `components/` Landing page and voting flow UI
+- `lib/` Blockchain, Firebase, and crypto helpers
+- `contracts/` Frontend ABI artifact
+- `blockchain/` Hardhat contract, deploy script, and tests
 
+## Main Features
 
-\## Project Structure
+- No login, registration, or session handling
+- NIC verification through a server-side Firestore lookup
+- Wallet-to-NIC matching before the ballot is shown
+- On-chain vote casting with MetaMask authorization
+- One-time vote cancellation that permanently blocks re-voting
+- Public landing page with live on-chain results
 
+## Setup
 
+1. Run `npm install` in the project root.
+2. Run `npm install` in `blockchain/`.
+3. Copy `.env.local.example` to `.env.local` and fill in the Firebase and contract values.
+4. Run `npm run dev` in the project root.
+5. Run `npm test` inside `blockchain/` to execute the smart contract test suite.
 
-\- /pages         → Next.js pages and API routes
+## Verification
 
-\- /components    → React UI components
-
-\- /lib           → Blockchain and Firebase helper functions
-
-\- /contracts     → Contract ABI (generated after compilation)
-
-\- /blockchain    → Hardhat project (smart contract, tests, deploy)
-
-
-
-\## Setup
-
-
-
-1\. Clone the repo
-
-2\. Run `npm install` in the root folder
-
-3\. Run `npm install` in the /blockchain folder
-
-4\. Copy .env.local.example to .env.local and fill in values
-
-5\. Run `npm run dev` to start the development server
-
-
-
-\## Team
-
-
-
-\- Member 1 — Smart contract
-
-\- Member 2 — Web3 bridge
-
-\- Member 3 — Landing page
-
-\- Member 4 — Voting page UI
-
-\- Member 5 — Voting page logic
-
-\- Member 6 — Firebase setup and API routes
-
-\- Member 7 — Testing and security
-
-\- Member 8 — Report and deployment
-
+- Root app: `npm run lint`
+- Root app: `npm run build`
+- Contract suite: `npm test` in `blockchain/`
