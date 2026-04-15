@@ -12,7 +12,7 @@ export default function Home() {
         </div>
         <div className="overview-stat">
           <strong>No sessions</strong>
-          <span>Eligibility is derived from NIC-to-wallet binding only.</span>
+          <span>Eligibility is determined by the connected wallet address.</span>
         </div>
         <div className="overview-stat">
           <strong>One-time cancel</strong>
@@ -25,11 +25,10 @@ export default function Home() {
         <aside className="info-column">
           <div className="glass-card info-card">
             <span className="eyebrow">Verification Model</span>
-            <h2>JSON lookup. MetaMask proof. Blockchain finality.</h2>
+            <h2>Wallet proof. On-chain finality.</h2>
             <p>
-              Voters do not log in. They enter a NIC number, the server checks
-              the pre-registered NIC hash in local JSON data, and the connected wallet
-              must match the assigned address before the ballot appears.
+              Voters do not log in. The ballot appears when the connected MetaMask
+              wallet is registered on-chain and the contract allows voting.
             </p>
           </div>
           <div className="glass-card info-card">

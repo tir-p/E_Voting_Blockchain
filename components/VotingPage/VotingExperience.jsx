@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import CancelModal from "@/components/VotingPage/CancelModal";
 import CandidateList from "@/components/VotingPage/CandidateList";
 import ConnectWallet from "@/components/VotingPage/ConnectWallet";
-import NICVerifyCard from "@/components/VotingPage/NICVerifyCard";
 import PostVoteCard from "@/components/VotingPage/PostVoteCard";
 import VoteModal from "@/components/VotingPage/VoteModal";
 import {
@@ -22,23 +21,11 @@ import {
   trackVoteRecord,
 } from "@/lib/blockchain";
 
-function buildVerificationMessage(assignedWallet, connectedWallet) {
-  return `NIC verified. The stored wallet ${assignedWallet} matches the connected wallet ${connectedWallet}.`;
-}
-
 export default function VotingExperience() {
   const [walletAddress, setWalletAddress] = useState("");
   const [networkLabel, setNetworkLabel] = useState("");
   const [walletError, setWalletError] = useState("");
   const [walletLoading, setWalletLoading] = useState(false);
-  const [nicValue, setNicValue] = useState("");
-  const [verifying, setVerifying] = useState(false);
-  const [verificationState, setVerificationState] = useState({
-    verified: false,
-    type: "info",
-    message: "",
-    assignedWallet: "",
-  });
   const [candidates, setCandidates] = useState([]);
   const [ballotLoading, setBallotLoading] = useState(false);
   const [status, setStatus] = useState({
@@ -87,13 +74,6 @@ export default function VotingExperience() {
     const unsubscribe = subscribeToWalletEvents({
       onAccountsChanged: (nextWalletAddress) => {
         setWalletAddress(nextWalletAddress);
-        setVerificationState({
-          verified: false,
-          type: "info",
-          message:
-            "Wallet changed. Re-run NIC verification to confirm the new address.",
-          assignedWallet: "",
-        });
         setStatus({
           isRegistered: false,
           hasVoted: false,
@@ -122,7 +102,7 @@ export default function VotingExperience() {
   }, []);
 
   useEffect(() => {
-    if (!verificationState.verified || !walletAddress) {
+    if (!walletAddress) {
       return;
     }
 
@@ -150,7 +130,7 @@ export default function VotingExperience() {
         if (!nextStatus.isRegistered) {
           setStatusTone("warning");
           setStatusMessage(
-            "The NIC matches this wallet, but the address has not been registered on-chain by the election authority yet.",
+            "This wallet is not registered on-chain by the election authority.",
           );
           return;
         }
@@ -202,13 +182,13 @@ export default function VotingExperience() {
     return () => {
       active = false;
     };
-  }, [verificationState.verified, walletAddress, transactionHash]);
+  }, [walletAddress, transactionHash]);
 
   const selectedCandidate =
     candidates.find((candidate) => candidate.id === selectedCandidateId) || null;
 
   const ballotDisabled =
-    !verificationState.verified ||
+    !walletAddress ||
     !electionOpen ||
     !status.isRegistered ||
     status.hasVoted ||
@@ -223,83 +203,12 @@ export default function VotingExperience() {
       const wallet = await connectWallet();
       setWalletAddress(wallet.address);
       setNetworkLabel(wallet.networkLabel);
-      setVerificationState({
-        verified: false,
-        type: "info",
-        message: "Wallet connected. Enter the NIC linked to this address.",
-        assignedWallet: "",
-      });
       setStatusTone("neutral");
-      setStatusMessage("Connect complete. Verify the NIC bound to this wallet to unlock the ballot.");
+      setStatusMessage("Wallet connected. Reading the wallet status and candidate list from the contract.");
     } catch (error) {
       setWalletError(formatContractError(error));
     } finally {
       setWalletLoading(false);
-    }
-  }
-
-  async function handleVerifyNic() {
-    if (!walletAddress) {
-      setVerificationState({
-        verified: false,
-        type: "error",
-        message: "Connect the registered MetaMask wallet before verifying a NIC.",
-        assignedWallet: "",
-      });
-      return;
-    }
-
-    setVerifying(true);
-    setActionError("");
-    setStatusTone("neutral");
-
-    try {
-      const response = await fetch("/api/verify-nic", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ nic: nicValue }),
-      });
-
-      const payload = await response.json();
-
-      if (!response.ok) {
-        throw new Error(payload.error || "NIC verification failed.");
-      }
-
-      const assignedWallet = payload.walletAddress;
-      const matches = assignedWallet.toLowerCase() === walletAddress.toLowerCase();
-
-      if (!matches) {
-        setVerificationState({
-          verified: false,
-          type: "error",
-          message:
-            "This NIC is not linked to the currently connected wallet. Switch MetaMask to the assigned wallet and verify again.",
-          assignedWallet,
-        });
-        return;
-      }
-
-      setVerificationState({
-        verified: true,
-        type: "success",
-        message: buildVerificationMessage(assignedWallet, walletAddress),
-        assignedWallet,
-      });
-      setStatusMessage("NIC verified. Reading the wallet status and candidate list from the contract.");
-    } catch (error) {
-      setVerificationState({
-        verified: false,
-        type: "error",
-        message:
-          error instanceof Error ? error.message : "NIC verification failed.",
-        assignedWallet: "",
-      });
-      setStatusTone("error");
-    } finally {
-      setVerifying(false);
     }
   }
 
@@ -369,15 +278,7 @@ export default function VotingExperience() {
             walletAddress={walletAddress}
             walletError={walletError}
           />
-          <NICVerifyCard
-            nicValue={nicValue}
-            onNicChange={setNicValue}
-            onVerify={handleVerifyNic}
-            verifying={verifying}
-            verificationState={verificationState}
-            walletAddress={walletAddress}
-          />
-          {verificationState.verified ? (
+          {walletAddress ? (
             <CandidateList
               candidates={candidates}
               disabled={ballotDisabled}
@@ -389,7 +290,7 @@ export default function VotingExperience() {
               selectedCandidateId={selectedCandidateId}
             />
           ) : null}
-          {verificationState.verified ? (
+          {walletAddress ? (
             <PostVoteCard
               canCancel={status.hasVoted && !status.hasCancelled}
               cancelled={status.hasCancelled}
@@ -415,12 +316,12 @@ export default function VotingExperience() {
                 <strong>1. Wallet</strong>
                 <span>{walletAddress ? "Connected" : "Waiting for MetaMask connection"}</span>
               </div>
-              <div className={`checkpoint ${verificationState.verified ? "is-complete" : ""}`}>
-                <strong>2. NIC</strong>
+              <div className={`checkpoint ${walletAddress ? "is-complete" : ""}`}>
+                <strong>2. Wallet status</strong>
                 <span>
-                  {verificationState.verified
-                    ? "Verified against the assigned wallet"
-                    : "Pending NIC verification"}
+                  {walletAddress
+                    ? "Connected and checked on-chain"
+                    : "Waiting for MetaMask connection"}
                 </span>
               </div>
               <div
@@ -502,7 +403,7 @@ export default function VotingExperience() {
           </section>
 
           {actionError ? <div className="message-box is-error">{actionError}</div> : null}
-          {statusMessage && !verificationState.verified ? (
+          {statusMessage ? (
             <div className={`message-box ${statusTone ? `is-${statusTone}` : ""}`}>
               {statusMessage}
             </div>

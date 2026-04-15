@@ -35,11 +35,9 @@ function buildVoterRecord(record) {
   const nicHash = hashNic(record.nic);
 
   return {
-    docId: nicHash,
     nicHash,
     walletAddress,
     isEligible: record.isEligible ?? true,
-    fullName: record.fullName ?? "",
   };
 }
 

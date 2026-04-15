@@ -1,25 +1,16 @@
 {
   "voters": [
     {
-      "docId": "7e98b6c8dca48d3fec01c02693ef49b3eddb2289dd102cb577fc5ace156a5654",
-      "nicHash": "7e98b6c8dca48d3fec01c02693ef49b3eddb2289dd102cb577fc5ace156a5654",
       "walletAddress": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
-      "isEligible": true,
-      "fullName": "Priya Ramdin"
+      "isEligible": true
     },
     {
-      "docId": "2d717aa2dd2c04e0998d7b8c96d498e7e79c6486b3b745ea80df20269fd4ceb9",
-      "nicHash": "2d717aa2dd2c04e0998d7b8c96d498e7e79c6486b3b745ea80df20269fd4ceb9",
       "walletAddress": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
-      "isEligible": true,
-      "fullName": "Ravi Soodhoo"
+      "isEligible": true
     },
     {
-      "docId": "fe018eb48c7d61af5b0b8f5e50fe4058b7bf9a7571ce694613153e6e639bb2df",
-      "nicHash": "fe018eb48c7d61af5b0b8f5e50fe4058b7bf9a7571ce694613153e6e639bb2df",
       "walletAddress": "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
-      "isEligible": true,
-      "fullName": "Anjali Moorghen"
+      "isEligible": true
     }
   ]
 }

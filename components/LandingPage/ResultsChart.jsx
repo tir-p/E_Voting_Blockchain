@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import {
   getAddressUrl,
+  getCandidates,
   getElectionSummary,
-  getResults,
   shortAddress,
 } from "@/lib/blockchain";
 
@@ -57,14 +57,14 @@ function getPieSegments(candidates) {
 
 export default function ResultsChart() {
   const [refreshTick, setRefreshTick] = useState(0);
-  const [state, setState] = useState({
+  const [state, setState] = useState(() => ({
     loading: true,
     candidates: [],
     totalVotes: 0,
     electionOpen: false,
     contractAddress: "",
     error: "",
-  });
+  }));
 
   useEffect(() => {
     let isMounted = true;
@@ -73,7 +73,7 @@ export default function ResultsChart() {
       try {
         const [summary, candidates] = await Promise.all([
           getElectionSummary(),
-          getResults(),
+          getCandidates(),
         ]);
 
         if (!isMounted) {
@@ -276,7 +276,7 @@ export default function ResultsChart() {
       <div className="results-actions">
         <button
           className="secondary-button"
-          disabled={state.loading}
+          disabled={Boolean(state.loading)}
           onClick={() => {
             setState((current) => ({
               ...current,

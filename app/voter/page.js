@@ -5,7 +5,7 @@ import VotingExperience from "@/components/VotingPage/VotingExperience";
 export const metadata = {
   title: "Cast Vote | E-Voting Using Blockchain V2",
   description:
-    "Connect MetaMask, verify a NIC-to-wallet binding, and cast or cancel a blockchain vote.",
+    "Connect MetaMask, confirm on-chain eligibility, and cast or cancel a blockchain vote.",
 };
 
 export default function VoterPage() {
@@ -18,11 +18,10 @@ export default function VoterPage() {
       </div>
       <section className="panel-dark glass-card voter-hero">
         <span className="eyebrow">Voting Console</span>
-        <h1>One NIC. One registered wallet. One on-chain ballot.</h1>
+        <h1>One registered wallet. One on-chain ballot.</h1>
         <p>
-          The ballot stays hidden until the connected wallet matches the
-          wallet pre-assigned to the NIC hash stored in local JSON data. Voting and
-          cancellation both require MetaMask transaction approval.
+          The ballot is available when the connected MetaMask wallet is registered
+          on-chain. Voting and cancellation both require MetaMask transaction approval.
         </p>
         <div className="step-strip">
           <div className="step-pill">
@@ -30,8 +29,8 @@ export default function VoterPage() {
             <span>Use the wallet registered before the election.</span>
           </div>
           <div className="step-pill">
-            <strong>02. Verify</strong>
-            <span>Submit the NIC for a secure off-chain lookup.</span>
+            <strong>02. Confirm</strong>
+            <span>Check on-chain registration and vote state.</span>
           </div>
           <div className="step-pill">
             <strong>03. Vote</strong>

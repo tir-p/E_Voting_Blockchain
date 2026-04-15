@@ -5,7 +5,7 @@ import "./globals.css";
 export const metadata = {
   title: "E-Voting Using Blockchain V2",
   description:
-    "Blockchain-based e-voting with NIC-to-wallet verification, MetaMask authorization, and public on-chain results.",
+    "Blockchain-based e-voting with MetaMask authorization and public on-chain results.",
 };
 
 export default function RootLayout({ children }) {
@@ -19,7 +19,7 @@ export default function RootLayout({ children }) {
                 <span className="brand-mark">EV</span>
                 <span className="brand-copy">
                   <strong>E-Voting Blockchain</strong>
-                  <span>NIC verification with on-chain finality</span>
+                  <span>Wallet registration with on-chain finality</span>
                 </span>
               </Link>
               <nav className="site-nav" aria-label="Primary">
@@ -31,8 +31,8 @@ export default function RootLayout({ children }) {
           {children}
           <footer className="site-footer">
             <p>
-              Local JSON data handles voter lookup. Ethereum remains the authoritative
-              election ledger.
+              Ethereum remains the authoritative election ledger. MetaMask proves
+              that the connected wallet is eligible to vote.
             </p>
           </footer>
         </div>

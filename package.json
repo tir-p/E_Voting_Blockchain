@@ -7,7 +7,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "data:generate": "node scripts/generate-voter-hashes.mjs scripts/voters.raw.example.json data/voters.json",
     "data:reset-records": "node scripts/reset-vote-records.mjs"
   },
   "dependencies": {

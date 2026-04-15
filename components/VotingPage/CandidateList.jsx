@@ -21,8 +21,7 @@ export default function CandidateList({
       </div>
       <p>
         The contract enforces whether this wallet can still vote. The interface
-        only forwards a candidate choice after NIC verification and on-chain
-        status checks both pass.
+        only forwards a candidate choice after on-chain status checks pass.
       </p>
       {note ? (
         <div className={`message-box ${noteTone ? `is-${noteTone}` : ""}`}>{note}</div>
@@ -75,7 +74,7 @@ export default function CandidateList({
       <div className="candidate-actions">
         <button
           className="cta-button"
-          disabled={disabled || loading || !selectedCandidateId}
+          disabled={Boolean(disabled || loading || selectedCandidateId == null)}
           onClick={onOpenVoteModal}
           type="button"
         >
