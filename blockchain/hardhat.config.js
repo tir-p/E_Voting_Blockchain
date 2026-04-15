@@ -32,25 +32,50 @@ export default defineConfig({
     },
   },
   networks: {
-    hardhatMainnet: {
+    hardhat: {
       type: "edr-simulated",
       chainType: "l1",
+      chainId: 31337,
+      accounts: [
+        {
+          privateKey:
+            "0x0000000000000000000000000000000000000000000000000000000000000001",
+          balance: "10000000000000000000000",
+        },
+        {
+          privateKey:
+            "0x0000000000000000000000000000000000000000000000000000000000000002",
+          balance: "10000000000000000000000",
+        },
+        {
+          privateKey:
+            "0x0000000000000000000000000000000000000000000000000000000000000003",
+          balance: "10000000000000000000000",
+        },
+        {
+          privateKey:
+            "0x0000000000000000000000000000000000000000000000000000000000000004",
+          balance: "10000000000000000000000",
+        },
+        {
+          privateKey:
+            "0x0000000000000000000000000000000000000000000000000000000000000005",
+          balance: "10000000000000000000000",
+        },
+        {
+          privateKey:
+            "0x0000000000000000000000000000000000000000000000000000000000000006",
+          balance: "10000000000000000000000",
+        },
+      ],
+    },
+    "hardhat-node": {
+      type: "http",
+      url: "http://hardhat-node:8545",
     },
     localhost: {
       type: "http",
-      chainType: "l1",
-      url: process.env.LOCAL_RPC_URL || DEFAULT_LOCAL_RPC_URL,
-      accounts: [process.env.LOCAL_OWNER_PRIVATE_KEY || DEFAULT_LOCAL_OWNER_PRIVATE_KEY],
+      url: "http://127.0.0.1:8545",
     },
-    ...(process.env.SEPOLIA_RPC_URL && process.env.SEPOLIA_PRIVATE_KEY
-      ? {
-          sepolia: {
-            type: "http",
-            chainType: "l1",
-            url: process.env.SEPOLIA_RPC_URL,
-            accounts: [process.env.SEPOLIA_PRIVATE_KEY],
-          },
-        }
-      : {}),
   },
 });

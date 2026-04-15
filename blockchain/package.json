@@ -5,12 +5,7 @@
   "scripts": {
     "compile": "hardhat compile",
     "test": "hardhat test",
-    "node": "hardhat node",
-    "deploy:local": "hardhat run scripts/deploy.js --network localhost",
-    "setup:localhost": "hardhat run scripts/setup-election.js --network localhost",
-    "register:voters:localhost": "hardhat run scripts/register-voters.js --network localhost",
-    "open:election:localhost": "hardhat run scripts/open-election.js --network localhost",
-    "close:election:localhost": "hardhat run scripts/close-election.js --network localhost"
+    "deploy:local": "hardhat run scripts/deploy.js"
   },
   "keywords": [],
   "author": "",

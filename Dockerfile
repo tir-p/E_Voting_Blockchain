@@ -1,0 +1,12 @@
+FROM node:22.10-bullseye
+
+WORKDIR /usr/src/app
+
+COPY package.json package-lock.json* ./
+RUN npm install
+
+COPY . .
+
+EXPOSE 3000
+
+CMD ["npm", "run", "dev", "--", "--hostname", "0.0.0.0"]
