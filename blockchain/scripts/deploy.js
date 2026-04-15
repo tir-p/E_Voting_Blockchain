@@ -1,33 +1,16 @@
-import { mkdir, writeFile } from "node:fs/promises";
-import path from "node:path";
+import { network } from "hardhat";
 
-import { artifacts, network } from "hardhat";
+import { writeFrontendArtifact } from "./shared.js";
 
 async function main() {
   const { ethers } = await network.connect();
   const voting = await ethers.deployContract("Voting");
   await voting.waitForDeployment();
 
-  const artifact = await artifacts.readArtifact("Voting");
-  const address = await voting.getAddress();
-  const outputPath = path.resolve(process.cwd(), "..", "contracts", "Voting.json");
-
-  await mkdir(path.dirname(outputPath), { recursive: true });
-  await writeFile(
-    outputPath,
-    JSON.stringify(
-      {
-        contractName: artifact.contractName,
-        address,
-        abi: artifact.abi,
-      },
-      null,
-      2,
-    ),
-  );
+  const address = await writeFrontendArtifact(voting);
 
   console.log(`Voting deployed to: ${address}`);
-  console.log(`ABI written to: ${outputPath}`);
+  console.log("Frontend contract artifact updated.");
 }
 
 main().catch((error) => {

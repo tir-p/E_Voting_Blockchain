@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { saveVoteRecord } from "@/lib/firebase";
+import { saveVoteRecord } from "@/lib/data-store";
 
 export async function POST(request) {
   try {

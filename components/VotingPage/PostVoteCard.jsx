@@ -1,6 +1,7 @@
 export default function PostVoteCard({
   selectedCandidate,
   transactionHash,
+  transactionUrl,
   canCancel,
   cancelled,
   loading,
@@ -50,9 +51,17 @@ export default function PostVoteCard({
               <strong>Latest transaction hash</strong>
               <code>{transactionHash}</code>
             </div>
-            <p className="message-subtext">
-              Keep this hash if you want to confirm the action in a blockchain explorer.
-            </p>
+            {transactionUrl ? (
+              <p className="message-subtext">
+                <a href={transactionUrl} rel="noreferrer" target="_blank">
+                  Open this transaction in the blockchain explorer.
+                </a>
+              </p>
+            ) : (
+              <p className="message-subtext">
+                Keep this hash if you want to confirm the action in a blockchain explorer.
+              </p>
+            )}
           </div>
         ) : null}
 

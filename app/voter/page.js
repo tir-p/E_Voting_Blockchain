@@ -21,7 +21,7 @@ export default function VoterPage() {
         <h1>One NIC. One registered wallet. One on-chain ballot.</h1>
         <p>
           The ballot stays hidden until the connected wallet matches the
-          wallet pre-assigned to the NIC hash stored in Firestore. Voting and
+          wallet pre-assigned to the NIC hash stored in local JSON data. Voting and
           cancellation both require MetaMask transaction approval.
         </p>
         <div className="step-strip">

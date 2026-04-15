@@ -6,17 +6,18 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "data:generate": "node scripts/generate-voter-hashes.mjs scripts/voters.raw.example.json data/voters.json",
+    "data:reset-records": "node scripts/reset-vote-records.mjs"
   },
   "dependencies": {
     "ethers": "^6.16.0",
-    "firebase": "^12.12.0",
-    "firebase-admin": "^13.8.0",
     "next": "16.2.3",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
   "devDependencies": {
+    "dotenv": "^17.4.2",
     "eslint": "^9",
     "eslint-config-next": "16.2.3"
   }

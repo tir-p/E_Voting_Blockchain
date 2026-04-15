@@ -24,7 +24,7 @@ export default function NICVerifyCard({
         )}
       </div>
       <p>
-        The server hashes the NIC, checks Firestore for a matching voter record,
+        The server hashes the NIC, checks the local voter JSON for a matching record,
         and returns the wallet bound to that NIC hash. The ballot unlocks only
         when it matches the connected MetaMask address.
       </p>
@@ -40,7 +40,7 @@ export default function NICVerifyCard({
           type="text"
           value={nicValue}
         />
-        <small>The raw NIC stays off-chain and should be stored only as a hash in Firestore.</small>
+        <small>The raw NIC stays off-chain and should be stored only as a hash in your voter data.</small>
       </div>
       {verificationState.assignedWallet && !verificationState.verified ? (
         <div className="message-box">

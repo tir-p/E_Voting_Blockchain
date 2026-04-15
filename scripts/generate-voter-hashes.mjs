@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { isAddress } from "ethers";
 
 function normalizeNic(nic) {
   return String(nic || "").trim().toUpperCase().replace(/\s+/g, "");
@@ -20,11 +21,15 @@ function hashNic(nic) {
   return createHash("sha256").update(normalized).digest("hex");
 }
 
-function buildFirestoreRecord(record) {
+function buildVoterRecord(record) {
   const walletAddress = normalizeWalletAddress(record.walletAddress);
 
   if (!walletAddress) {
     throw new Error(`Missing walletAddress for NIC "${record.nic ?? ""}".`);
+  }
+
+  if (!isAddress(walletAddress)) {
+    throw new Error(`Invalid Ethereum wallet address "${record.walletAddress}".`);
   }
 
   const nicHash = hashNic(record.nic);
@@ -57,7 +62,9 @@ async function main() {
     throw new Error("Input file must contain a JSON array.");
   }
 
-  const output = records.map(buildFirestoreRecord);
+  const output = {
+    voters: records.map(buildVoterRecord),
+  };
 
   await writeFile(
     path.resolve(process.cwd(), outputPath),
@@ -65,7 +72,7 @@ async function main() {
     "utf8",
   );
 
-  console.log(`Generated ${output.length} hashed voter records.`);
+  console.log(`Generated ${output.voters.length} hashed voter records.`);
   console.log(`Output written to ${path.resolve(process.cwd(), outputPath)}`);
 }
 

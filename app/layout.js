@@ -31,7 +31,7 @@ export default function RootLayout({ children }) {
           {children}
           <footer className="site-footer">
             <p>
-              Firebase handles voter lookup. Ethereum remains the authoritative
+              Local JSON data handles voter lookup. Ethereum remains the authoritative
               election ledger.
             </p>
           </footer>

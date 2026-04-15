@@ -25,10 +25,10 @@ export default function Home() {
         <aside className="info-column">
           <div className="glass-card info-card">
             <span className="eyebrow">Verification Model</span>
-            <h2>Firebase lookup. MetaMask proof. Blockchain finality.</h2>
+            <h2>JSON lookup. MetaMask proof. Blockchain finality.</h2>
             <p>
               Voters do not log in. They enter a NIC number, the server checks
-              the pre-registered NIC hash in Firestore, and the connected wallet
+              the pre-registered NIC hash in local JSON data, and the connected wallet
               must match the assigned address before the ballot appears.
             </p>
           </div>

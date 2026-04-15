@@ -5,7 +5,7 @@ export default function ElectionBanner() {
         <span className="eyebrow">E-Voting Using Blockchain V2</span>
         <h1>Public counting with private-key controlled ballots.</h1>
         <p>
-          Firebase handles only NIC-to-wallet lookup. MetaMask proves wallet
+          Local JSON data handles NIC-to-wallet lookup. MetaMask proves wallet
           ownership. The Ethereum contract enforces registration, vote status,
           cancellation status, and the live tally visible to every observer.
         </p>
@@ -33,7 +33,7 @@ export default function ElectionBanner() {
           <h2>Authority boundary</h2>
           <ul className="feature-list">
             <li>Election authority registers eligible wallets on-chain.</li>
-            <li>Firestore only confirms which wallet a NIC was bound to.</li>
+            <li>The voter JSON only confirms which wallet a NIC was bound to.</li>
             <li>Smart contract state is the final truth for every ballot.</li>
           </ul>
         </div>

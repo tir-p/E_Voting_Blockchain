@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { findEligibleVoterByNic } from "@/lib/firebase";
+import { findEligibleVoterByNic } from "@/lib/data-store";
 
 export async function POST(request) {
   try {

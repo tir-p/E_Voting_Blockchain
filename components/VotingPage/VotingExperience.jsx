@@ -14,6 +14,8 @@ import {
   connectWallet,
   formatContractError,
   getCandidates,
+  getElectionSummary,
+  getTransactionUrl,
   getVoterStatus,
   getWalletState,
   subscribeToWalletEvents,
@@ -21,7 +23,7 @@ import {
 } from "@/lib/blockchain";
 
 function buildVerificationMessage(assignedWallet, connectedWallet) {
-  return `NIC verified. Firestore returned ${assignedWallet}, which matches the connected wallet ${connectedWallet}.`;
+  return `NIC verified. The stored wallet ${assignedWallet} matches the connected wallet ${connectedWallet}.`;
 }
 
 export default function VotingExperience() {
@@ -54,6 +56,7 @@ export default function VotingExperience() {
   const [cancelLoading, setCancelLoading] = useState(false);
   const [actionError, setActionError] = useState("");
   const [transactionHash, setTransactionHash] = useState("");
+  const [electionOpen, setElectionOpen] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -129,9 +132,10 @@ export default function VotingExperience() {
       setBallotLoading(true);
 
       try {
-        const [nextCandidates, nextStatus] = await Promise.all([
+        const [nextCandidates, nextStatus, nextElectionSummary] = await Promise.all([
           getCandidates(),
           getVoterStatus(walletAddress),
+          getElectionSummary(),
         ]);
 
         if (!active) {
@@ -140,6 +144,7 @@ export default function VotingExperience() {
 
         setCandidates(nextCandidates);
         setStatus(nextStatus);
+        setElectionOpen(nextElectionSummary.electionOpen);
         setSelectedCandidateId(nextStatus.votedFor || null);
 
         if (!nextStatus.isRegistered) {
@@ -154,6 +159,14 @@ export default function VotingExperience() {
           setStatusTone("error");
           setStatusMessage(
             "This wallet previously cancelled its vote. The contract now treats it as permanently ineligible to vote again.",
+          );
+          return;
+        }
+
+        if (!nextElectionSummary.electionOpen) {
+          setStatusTone("warning");
+          setStatusMessage(
+            "The election contract is currently closed. You can review the ballot, but voting and cancellation are locked until the owner opens it.",
           );
           return;
         }
@@ -196,9 +209,11 @@ export default function VotingExperience() {
 
   const ballotDisabled =
     !verificationState.verified ||
+    !electionOpen ||
     !status.isRegistered ||
     status.hasVoted ||
     status.hasCancelled;
+  const transactionUrl = getTransactionUrl(transactionHash);
 
   async function handleConnectWallet() {
     setWalletLoading(true);
@@ -382,6 +397,7 @@ export default function VotingExperience() {
               onCancel={() => setCancelModalOpen(true)}
               selectedCandidate={selectedCandidate}
               transactionHash={transactionHash}
+              transactionUrl={transactionUrl}
             />
           ) : null}
         </div>
@@ -458,6 +474,10 @@ export default function VotingExperience() {
               <div className="summary-row">
                 <strong>Has cancelled</strong>
                 <span>{status.hasCancelled ? "Yes" : "No"}</span>
+              </div>
+              <div className="summary-row">
+                <strong>Election open</strong>
+                <span>{electionOpen ? "Yes" : "No"}</span>
               </div>
               <div className="summary-row">
                 <strong>Selected candidate ID</strong>

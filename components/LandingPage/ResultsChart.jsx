@@ -3,7 +3,12 @@
 import { useEffect, useState } from "react";
 
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
-import { getResults, getElectionSummary, shortAddress } from "@/lib/blockchain";
+import {
+  getAddressUrl,
+  getElectionSummary,
+  getResults,
+  shortAddress,
+} from "@/lib/blockchain";
 
 const CANDIDATE_COLORS = ["#d95d39", "#2a7f62", "#c89b2f", "#5b79c8"];
 
@@ -116,6 +121,7 @@ export default function ResultsChart() {
     0,
   );
   const pieSegments = getPieSegments(state.candidates);
+  const contractUrl = getAddressUrl(state.contractAddress);
 
   return (
     <section className="glass-card results-shell">
@@ -154,7 +160,13 @@ export default function ResultsChart() {
               <span>Candidates</span>
             </div>
             <div className="mini-stat">
-              <strong>{shortAddress(state.contractAddress) || "Not set"}</strong>
+              {contractUrl ? (
+                <a href={contractUrl} rel="noreferrer" target="_blank">
+                  <strong>{shortAddress(state.contractAddress) || "Not set"}</strong>
+                </a>
+              ) : (
+                <strong>{shortAddress(state.contractAddress) || "Not set"}</strong>
+              )}
               <span>Contract address</span>
             </div>
           </div>
