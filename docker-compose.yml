@@ -47,6 +47,8 @@ services:
       - node_modules:/usr/src/app/node_modules
       - next_cache:/usr/src/app/.next
     environment:
+      # First contract deployed to a fresh local Hardhat node by the default deployer.
+      NEXT_PUBLIC_CONTRACT_ADDRESS: "0x5FbDB2315678afecb367f032d93F642f64180aa3"
       NEXT_PUBLIC_CHAIN_ID: "31337"
       NEXT_PUBLIC_RPC_URL: "http://localhost:8545"
       RPC_URL: "http://hardhat-node:8545"
