@@ -10,18 +10,24 @@ services:
     command: sh -c "cd /usr/src/app/blockchain && npm install && npx hardhat node --hostname 0.0.0.0 --port 8545"
     networks:
       - evoting-net
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8545"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
 
   deploy:
     image: node:22.10-bullseye
     container_name: evoting-deploy
     depends_on:
-      - hardhat-node
+      hardhat-node:
+        condition: service_healthy
     working_dir: /usr/src/app/blockchain
     volumes:
       - ./:/usr/src/app
     environment:
       NODE_URL: "http://hardhat-node:8545"
-    command: sh -c "cd /usr/src/app/blockchain && npm install && node scripts/wait-for-node.mjs && npx hardhat run scripts/deploy.js --network hardhat-node"
+    command: sh -c "cd /usr/src/app/blockchain && npm install && node scripts/wait-for-node.mjs && npx hardhat run scripts/deploy.js --network hardhat-node && echo 'Deployment completed successfully'"
     networks:
       - evoting-net
     restart: "no"
@@ -39,16 +45,19 @@ services:
     volumes:
       - ./:/usr/src/app
       - node_modules:/usr/src/app/node_modules
+      - next_cache:/usr/src/app/.next
     environment:
       NEXT_PUBLIC_CHAIN_ID: "31337"
       NEXT_PUBLIC_RPC_URL: "http://localhost:8545"
       RPC_URL: "http://hardhat-node:8545"
-    command: sh -c "npm install && node scripts/wait-for-contract-artifact.mjs && npm run dev -- --hostname 0.0.0.0"
+      WAIT_FOR_CONTRACT_ARTIFACT_RETRIES: "120"
+    command: sh -c "npm install && node scripts/wait-for-contract-artifact.mjs && npm run dev -- --hostname 0.0.0.0 --webpack"
     networks:
       - evoting-net
 
 volumes:
   node_modules:
+  next_cache:
 
 networks:
   evoting-net:
