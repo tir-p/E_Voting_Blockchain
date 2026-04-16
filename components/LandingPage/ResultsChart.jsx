@@ -55,6 +55,23 @@ function getPieSegments(candidates) {
   });
 }
 
+function toFiniteNumber(value, fallback = 0) {
+  try {
+    const number = Number(value);
+    return Number.isFinite(number) ? number : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function getRenderableCandidates(candidates) {
+  return candidates.map((candidate, index) => ({
+    ...candidate,
+    id: toFiniteNumber(candidate.id, index + 1),
+    voteCount: toFiniteNumber(candidate.voteCount),
+  }));
+}
+
 export default function ResultsChart() {
   const [refreshTick, setRefreshTick] = useState(0);
   const [state, setState] = useState(() => ({
@@ -71,10 +88,8 @@ export default function ResultsChart() {
 
     async function load() {
       try {
-        const [summary, candidates] = await Promise.all([
-          getElectionSummary(),
-          getCandidates(),
-        ]);
+        const candidates = await getCandidates();
+        const summary = await getElectionSummary(candidates);
 
         if (!isMounted) {
           return;
@@ -116,11 +131,13 @@ export default function ResultsChart() {
     };
   }, [refreshTick]);
 
-  const highestVote = state.candidates.reduce(
+  const candidates = getRenderableCandidates(state.candidates);
+  const totalVotes = toFiniteNumber(state.totalVotes);
+  const highestVote = candidates.reduce(
     (max, candidate) => Math.max(max, candidate.voteCount),
     0,
   );
-  const pieSegments = getPieSegments(state.candidates);
+  const pieSegments = getPieSegments(candidates);
   const contractUrl = getAddressUrl(state.contractAddress);
 
   return (
@@ -152,11 +169,11 @@ export default function ResultsChart() {
         <>
           <div className="mini-stats">
             <div className="mini-stat">
-              <strong>{state.totalVotes}</strong>
+              <strong>{totalVotes}</strong>
               <span>Total votes recorded</span>
             </div>
             <div className="mini-stat">
-              <strong>{state.candidates.length}</strong>
+              <strong>{candidates.length}</strong>
               <span>Candidates</span>
             </div>
             <div className="mini-stat">
@@ -174,7 +191,7 @@ export default function ResultsChart() {
           <div className="chart-grid">
             <div className="chart-shell">
               <div className="bar-chart" aria-label="Vote totals bar chart">
-                {state.candidates.map((candidate, index) => {
+                {candidates.map((candidate, index) => {
                   const fillHeight = highestVote
                     ? Math.max((candidate.voteCount / highestVote) * 100, candidate.voteCount ? 12 : 6)
                     : 6;
@@ -232,7 +249,7 @@ export default function ResultsChart() {
                       textAnchor="middle"
                       style={{ fontSize: "22px", fill: "#10212d", fontWeight: 700 }}
                     >
-                      {state.totalVotes}
+                      {totalVotes}
                     </text>
                   </svg>
                 ) : (
@@ -244,9 +261,9 @@ export default function ResultsChart() {
               </div>
 
               <div className="legend">
-                {state.candidates.map((candidate, index) => {
-                  const share = state.totalVotes
-                    ? Math.round((candidate.voteCount / state.totalVotes) * 100)
+                {candidates.map((candidate, index) => {
+                  const share = totalVotes
+                    ? Math.round((candidate.voteCount / totalVotes) * 100)
                     : 0;
 
                   return (

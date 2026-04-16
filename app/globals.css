@@ -310,9 +310,12 @@ main {
 }
 
 .stat-chip span,
-.mini-stat span,
 .muted {
   color: rgba(247, 244, 239, 0.74);
+}
+
+.mini-stat span {
+  color: var(--text-muted);
 }
 
 .hero-aside {

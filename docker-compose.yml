@@ -27,7 +27,7 @@ services:
       - ./:/usr/src/app
     environment:
       NODE_URL: "http://hardhat-node:8545"
-    command: sh -c "cd /usr/src/app/blockchain && npm install && node scripts/wait-for-node.mjs && npx hardhat run scripts/deploy.js --network hardhat-node && echo 'Deployment completed successfully'"
+    command: sh -c "cd /usr/src/app/blockchain && npm install && node scripts/wait-for-node.mjs && npx hardhat run scripts/setup-election.js --network hardhat-node && echo 'Election setup completed successfully'"
     networks:
       - evoting-net
     restart: "no"

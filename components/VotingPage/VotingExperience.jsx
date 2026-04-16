@@ -44,6 +44,7 @@ export default function VotingExperience() {
   const [actionError, setActionError] = useState("");
   const [transactionHash, setTransactionHash] = useState("");
   const [electionOpen, setElectionOpen] = useState(false);
+  const [walletRefreshTick, setWalletRefreshTick] = useState(0);
 
   useEffect(() => {
     let active = true;
@@ -74,6 +75,7 @@ export default function VotingExperience() {
     const unsubscribe = subscribeToWalletEvents({
       onAccountsChanged: (nextWalletAddress) => {
         setWalletAddress(nextWalletAddress);
+        setWalletError("");
         setStatus({
           isRegistered: false,
           hasVoted: false,
@@ -82,6 +84,7 @@ export default function VotingExperience() {
         });
         setSelectedCandidateId(null);
         setActionError("");
+        setWalletRefreshTick((current) => current + 1);
       },
       onChainChanged: async () => {
         try {
@@ -112,11 +115,11 @@ export default function VotingExperience() {
       setBallotLoading(true);
 
       try {
-        const [nextCandidates, nextStatus, nextElectionSummary] = await Promise.all([
+        const [nextCandidates, nextStatus] = await Promise.all([
           getCandidates(),
           getVoterStatus(walletAddress),
-          getElectionSummary(),
         ]);
+        const nextElectionSummary = await getElectionSummary(nextCandidates);
 
         if (!active) {
           return;
@@ -182,7 +185,7 @@ export default function VotingExperience() {
     return () => {
       active = false;
     };
-  }, [walletAddress, transactionHash]);
+  }, [walletAddress, transactionHash, walletRefreshTick]);
 
   const selectedCandidate =
     candidates.find((candidate) => candidate.id === selectedCandidateId) || null;
@@ -200,11 +203,15 @@ export default function VotingExperience() {
     setWalletError("");
 
     try {
-      const wallet = await connectWallet();
+      const wallet = await connectWallet({
+        forceAccountSelection: Boolean(walletAddress),
+      });
       setWalletAddress(wallet.address);
       setNetworkLabel(wallet.networkLabel);
+      setActionError("");
       setStatusTone("neutral");
       setStatusMessage("Wallet connected. Reading the wallet status and candidate list from the contract.");
+      setWalletRefreshTick((current) => current + 1);
     } catch (error) {
       setWalletError(formatContractError(error));
     } finally {
@@ -225,16 +232,23 @@ export default function VotingExperience() {
       const result = await castVote(selectedCandidateId);
       setTransactionHash(result.transactionHash);
       setVoteModalOpen(false);
-      await trackVoteRecord({
-        action: "vote",
-        candidateId: selectedCandidateId,
-        transactionHash: result.transactionHash,
-        walletAddress,
-      });
       setStatusTone("success");
       setStatusMessage(
         "Vote confirmed on-chain. The selected candidate and transaction hash are shown below.",
       );
+
+      try {
+        await trackVoteRecord({
+          action: "vote",
+          candidateId: selectedCandidateId,
+          transactionHash: result.transactionHash,
+          walletAddress,
+        });
+      } catch (recordError) {
+        setActionError(
+          `Vote confirmed on-chain, but the local vote record could not be saved: ${formatContractError(recordError)}`,
+        );
+      }
     } catch (error) {
       setActionError(formatContractError(error));
     } finally {
@@ -250,16 +264,23 @@ export default function VotingExperience() {
       const result = await cancelVote();
       setTransactionHash(result.transactionHash);
       setCancelModalOpen(false);
-      await trackVoteRecord({
-        action: "cancel",
-        candidateId: status.votedFor || selectedCandidateId,
-        transactionHash: result.transactionHash,
-        walletAddress,
-      });
       setStatusTone("error");
       setStatusMessage(
         "Cancellation confirmed on-chain. This wallet can no longer vote again in this election.",
       );
+
+      try {
+        await trackVoteRecord({
+          action: "cancel",
+          candidateId: status.votedFor || selectedCandidateId,
+          transactionHash: result.transactionHash,
+          walletAddress,
+        });
+      } catch (recordError) {
+        setActionError(
+          `Cancellation confirmed on-chain, but the local vote record could not be saved: ${formatContractError(recordError)}`,
+        );
+      }
     } catch (error) {
       setActionError(formatContractError(error));
     } finally {
