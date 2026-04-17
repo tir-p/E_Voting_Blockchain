@@ -1,6 +1,6 @@
 import http from "node:http";
 
-const URL = process.env.NODE_URL || "http://127.0.0.1:8545";
+const URL = "http://127.0.0.1:8545";
 const RETRIES = 30;
 const DELAY_MS = 1000;
 

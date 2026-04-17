@@ -5,7 +5,7 @@ import path from "node:path";
 import { ethers } from "ethers";
 
 const ARTIFACT_PATH = path.join(process.cwd(), "contracts", "Voting.json");
-const RPC_URL = process.env.RPC_URL || process.env.NEXT_PUBLIC_RPC_URL || "http://hardhat-node:8545";
+const RPC_URL = "https://eth-sepolia.g.alchemy.com/v2/O_fVS_sndGg1Ro5J0XO1Z";
 
 async function diagnose() {
   console.log("=== E-Voting Blockchain Deployment Diagnostics ===\n");
@@ -42,7 +42,7 @@ async function diagnose() {
     console.log(`   ✓ Chain ID: ${chainId.chainId}`);
   } catch (error) {
     console.log(`   ✗ ERROR: Failed to connect to RPC: ${error.message}`);
-    console.log(`   Make sure the hardhat node is running at ${RPC_URL}`);
+    console.log(`   Make sure the RPC endpoint is available at ${RPC_URL}`);
     return;
   }
 
@@ -90,9 +90,9 @@ async function diagnose() {
 
   console.log("\n=== End Diagnostics ===\n");
   console.log("If the contract is not deployed:");
-  console.log("1. Check the deploy container logs: docker logs evoting-deploy");
-  console.log("2. Verify hardhat node is running: docker logs evoting-hardhat-node");
-  console.log("3. Restart services: docker-compose down && docker-compose up --build");
+  console.log("1. Confirm the hardcoded RPC URL is correct for Sepolia.");
+  console.log("2. Verify your deployment script ran without errors.");
+  console.log("3. Re-run the deployment with a valid Sepolia RPC endpoint.");
 }
 
 diagnose().catch((error) => {

@@ -73,6 +73,7 @@ function getRenderableCandidates(candidates) {
 }
 
 export default function ResultsChart() {
+  const [mounted, setMounted] = useState(false);
   const [refreshTick, setRefreshTick] = useState(0);
   const [state, setState] = useState(() => ({
     loading: true,
@@ -84,6 +85,14 @@ export default function ResultsChart() {
   }));
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) {
+      return undefined;
+    }
+
     let isMounted = true;
 
     async function load() {
@@ -129,7 +138,7 @@ export default function ResultsChart() {
       isMounted = false;
       window.clearInterval(intervalId);
     };
-  }, [refreshTick]);
+  }, [refreshTick, mounted]);
 
   const candidates = getRenderableCandidates(state.candidates);
   const totalVotes = toFiniteNumber(state.totalVotes);
@@ -139,6 +148,28 @@ export default function ResultsChart() {
   );
   const pieSegments = getPieSegments(candidates);
   const contractUrl = getAddressUrl(state.contractAddress);
+
+  if (!mounted) {
+    return (
+      <section className="glass-card results-shell">
+        <div className="results-header">
+          <div>
+            <span className="eyebrow">Public Ledger View</span>
+            <h2>Live blockchain tally</h2>
+          </div>
+          <span className="status-badge is-closed">Election Closed</span>
+        </div>
+        <p>
+          The chart below reads from the deployed contract. If public RPC access
+          or the contract address is missing, the page explains what is not
+          configured instead of falling back to private data.
+        </p>
+        <div className="chart-shell">
+          <div className="skeleton" />
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="glass-card results-shell">

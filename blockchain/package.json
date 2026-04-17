@@ -5,7 +5,9 @@
   "scripts": {
     "compile": "hardhat compile",
     "test": "hardhat test",
-    "deploy:local": "hardhat run scripts/deploy.js"
+    "deploy:local": "hardhat run scripts/deploy.js",
+    "deploy:sepolia": "hardhat run scripts/deploy.js --network sepolia",
+    "setup:sepolia": "hardhat run scripts/setup-election.js --network sepolia"
   },
   "keywords": [],
   "author": "",
@@ -17,7 +19,6 @@
     "@nomicfoundation/hardhat-mocha": "^3.0.15",
     "@types/node": "^22.19.17",
     "chai": "^6.2.2",
-    "dotenv": "^17.4.2",
     "ethers": "^6.14.0",
     "hardhat": "^3.3.0",
     "mocha": "^11.0.0",

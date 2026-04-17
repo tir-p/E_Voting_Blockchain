@@ -23,6 +23,8 @@ voting contract.
   Open the deployed election.
 - `npm run close:election:localhost`
   Close the deployed election.
+- `npm run setup:sepolia`
+  Deploy the contract, register eligible wallets, and open the election on Sepolia.
 
 ## Files
 

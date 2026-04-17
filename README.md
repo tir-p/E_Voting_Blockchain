@@ -27,27 +27,14 @@ Hardhat 3, ethers, and MetaMask.
 - `data/vote-records.json`
   Stores the latest vote or cancellation transaction hash for each wallet.
 
-## Local Demo Order
+## Sepolia Deployment
 
-1. Run the full stack:
-   `docker compose up --build`
-2. Watch the `evoting-hardhat-node` logs for the generated local Hardhat
-   accounts and their private keys.
-3. Open MetaMask, add a network with:
-   - RPC URL: `http://localhost:8545`
-   - Chain ID: `31337`
-4. Import one of the local voter private keys from the Docker logs as a new
-   account in MetaMask.
-5. Open the app at `http://localhost:3000`.
+This repository now hardcodes the Sepolia RPC URL and contract settings, so no `.env` file is required.
 
-### MetaMask setup
-
-After Docker starts, the `evoting-hardhat-node` logs show the local Hardhat
-accounts and private keys. Import one of the voter accounts into MetaMask as
-a new account, then use the local RPC URL to connect.
-
-Use `http://localhost:8545` as the RPC URL in MetaMask for the Docker-backed
-local network.
+1. Deploy the contract from the `blockchain` folder:
+   `cd blockchain && npx hardhat run scripts/setup-election.js --network sepolia`
+2. Open MetaMask, switch to Sepolia, and connect your wallet.
+3. Open the app at `http://localhost:3000`.
 
 ## Local Demo Voters
 
@@ -68,14 +55,7 @@ The contract owner for local setup uses:
 
 ## Production-Like Setup
 
-If you later move from localhost to Sepolia:
-
-1. Create the voter mapping in `data/voters.json` with eligible wallet
-   addresses and registration flags.
-2. Configure `.env.local` and the blockchain environment with your Sepolia RPC
-   URL and deployer private key.
-3. Run:
-   `cd blockchain && npx hardhat run scripts/setup-election.js --network sepolia`
+Use the Sepolia Deployment section above to configure your Sepolia RPC URL, private key, and contract address. Then deploy with `cd blockchain && npx hardhat run scripts/setup-election.js --network sepolia`.
 
 ## Verification
 

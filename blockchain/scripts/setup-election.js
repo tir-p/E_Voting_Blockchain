@@ -19,7 +19,7 @@ async function main() {
     console.log("No eligible wallets found to register.");
   }
 
-  const openElection = process.env.OPEN_ELECTION !== "false";
+  const openElection = true;
 
   if (openElection) {
     const openTx = await voting.openElection();
