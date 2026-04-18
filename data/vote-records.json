@@ -8,6 +8,15 @@
       "cancelTransactionHash": "0xbc5e7e9e6281e51247b973dd6773577c7601c20dfe272c2daf23dc4d9df25064",
       "votedAt": "2026-04-16T18:24:03.736Z",
       "cancelledAt": "2026-04-16T18:27:02.674Z"
+    },
+    {
+      "walletAddress": "0x0ab4a24c90e694a1bcff46f8403cefe87416b711",
+      "votedCandidateId": 1,
+      "voteTransactionHash": "0xc4610692450ffb71c48987d2f7c1939a359c606b53f0f29c56e4afb281047e13",
+      "cancelled": false,
+      "cancelTransactionHash": null,
+      "votedAt": "2026-04-18T04:41:39.693Z",
+      "cancelledAt": null
     }
   ]
 }

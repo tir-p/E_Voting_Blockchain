@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  # Main Next.js application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: e-voting-app
+    ports:
+      - "3000:3000"
+    environment:
+      # Network Configuration
+      - NEXT_PUBLIC_CHAIN_ID=${NEXT_PUBLIC_CHAIN_ID:-11155111}
+      - NEXT_PUBLIC_RPC_URL=${NEXT_PUBLIC_RPC_URL:-https://eth-sepolia.g.alchemy.com/v2/O_fVS_sndGg1Ro5J0XO1Z}
+      
+      # Contract Configuration
+      - NEXT_PUBLIC_CONTRACT_ADDRESS=${NEXT_PUBLIC_CONTRACT_ADDRESS:-}
+      - NEXT_PUBLIC_CONTRACT_GAS_LIMIT=${NEXT_PUBLIC_CONTRACT_GAS_LIMIT:-0x493e0}
+      
+      # Hardhat Configuration (for deployment scripts)
+      - SEPOLIA_RPC_URL=${SEPOLIA_RPC_URL:-https://eth-sepolia.g.alchemy.com/v2/O_fVS_sndGg1Ro5J0XO1Z}
+      - SEPOLIA_PRIVATE_KEY=${SEPOLIA_PRIVATE_KEY:-}
+      
+      # Node Environment
+      - NODE_ENV=${NODE_ENV:-production}
+    
+    volumes:
+      - ./data:/app/data
+      - ./contracts:/app/contracts
+    networks:
+      - voting-network
+
+networks:
+  voting-network:
+    driver: bridge

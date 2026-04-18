@@ -5,7 +5,7 @@ import { ethers } from "ethers";
 const ARTIFACT_PATH = path.join(process.cwd(), "contracts", "Voting.json");
 const POLL_INTERVAL_MS = 1000;
 const MAX_RETRIES = 60;
-const RPC_URL = "https://eth-sepolia.g.alchemy.com/v2/O_fVS_sndGg1Ro5J0XO1Z";
+const RPC_URL = process.env.NEXT_PUBLIC_RPC_URL || "https://eth-sepolia.g.alchemy.com/v2/O_fVS_sndGg1Ro5J0XO1Z";
 
 async function readContractArtifact() {
   const raw = await readFile(ARTIFACT_PATH, "utf8");

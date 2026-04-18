@@ -3,8 +3,8 @@ import hardhatEthersChaiMatchersPlugin from "@nomicfoundation/hardhat-ethers-cha
 import hardhatMochaPlugin from "@nomicfoundation/hardhat-mocha";
 import { defineConfig } from "hardhat/config";
 
-const SEPOLIA_RPC_URL = "https://eth-sepolia.g.alchemy.com/v2/O_fVS_sndGg1Ro5J0XO1Z";
-const SEPOLIA_PRIVATE_KEY = "f615f7ec63641175ad373533b993ad6138e5f06689f6a5d54210b11a478438c3";
+const SEPOLIA_RPC_URL = process.env.SEPOLIA_RPC_URL || "https://eth-sepolia.g.alchemy.com/v2/O_fVS_sndGg1Ro5J0XO1Z";
+const SEPOLIA_PRIVATE_KEY = process.env.SEPOLIA_PRIVATE_KEY || "";
 
 export default defineConfig({
   plugins: [
@@ -71,10 +71,6 @@ export default defineConfig({
       url: SEPOLIA_RPC_URL,
       chainId: 11155111,
       accounts: SEPOLIA_PRIVATE_KEY ? [SEPOLIA_PRIVATE_KEY] : [],
-    },
-    localhost: {
-      type: "http",
-      url: "http://127.0.0.1:8545",
     },
   },
 });
