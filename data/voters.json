@@ -15,6 +15,10 @@
     {
       "walletAddress": "0xA5c441a26FD76F72424fc169Fecf6ceE3d9Fbc23",
       "isEligible": true
+    },
+    {
+      "walletAddress": "0x4C67f43759919E69cF9009339403b57A2E8DB5B0",
+      "isEligible": true
     }
   ]
 }
